@@ -1,6 +1,6 @@
 ## Info:
 
-It will read the files from the emailFiles folder, process them and move them into processedFiles folder in case of success and if failure to process it will move them into erroredFiles folder and log them as well (all logs will be in combine.log at the root but error logs will be in erroredFiles folder).
+It will read the files from the emails folder, move into processing folder process them and move them into either processed folder in case of success or move them into errored folder in case of error and log them as well (all logs will be at root as `combine.log` and error logs will be in errored folder as `error.log`).
 
 ## Note:
 
