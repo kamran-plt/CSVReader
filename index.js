@@ -12,7 +12,7 @@ fs.readdir('./emails/', (err, files) =>
 );
 
 const processCSV = (file) => {
-  const fileProcessor = (file) => {
+  moveFile(file, 'emails', 'processing', (file) => {
     const reader = fs
       .createReadStream(`processing/${file}`)
       .pipe(eventStream.split())
@@ -32,8 +32,7 @@ const processCSV = (file) => {
             moveFile(file, 'processing', 'processed');
           })
       );
-  };
-  moveFile(file, 'emails', 'processing', fileProcessor);
+  });
 };
 
 const callCheckEmail = (row, lineNumber, file, reader) => {
@@ -53,11 +52,11 @@ const callCheckEmail = (row, lineNumber, file, reader) => {
     });
 };
 
-const moveFile = (file, from, to, fileProcessor) =>
+const moveFile = (file, from, to, cb) =>
   fs.rename(`${from}/${file}`, `${to}/${file}`, (err) => {
     if (err) logger.error(err);
     else {
       logger.info(`Moved file: ${file} into ${to} folder`);
-      fileProcessor !== undefined && fileProcessor(file);
+      cb !== undefined && cb(file);
     }
   });
