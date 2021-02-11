@@ -1,0 +1,8 @@
+Thu Feb 11 2021 10:25:35 GMT+0000 (Greenwich Mean Time) error: Error with file: emails-1.csv on line: 1 - Response data: {"Message":{"Error":"AuthUnexpectedMigrationError: Error Response from Auth"},"Success":false}
+Thu Feb 11 2021 10:25:35 GMT+0000 (Greenwich Mean Time) info: Moved file: emails-1.csv into erroredFiles folder
+Thu Feb 11 2021 10:25:39 GMT+0000 (Greenwich Mean Time) info: Processed entire file: emails-2.csv
+Thu Feb 11 2021 10:25:39 GMT+0000 (Greenwich Mean Time) info: Moved file: emails-2.csv into processedFiles folder
+Thu Feb 11 2021 10:25:42 GMT+0000 (Greenwich Mean Time) info: Processed entire file: emails-3.csv
+Thu Feb 11 2021 10:25:42 GMT+0000 (Greenwich Mean Time) info: Moved file: emails-3.csv into processedFiles folder
+Thu Feb 11 2021 10:25:44 GMT+0000 (Greenwich Mean Time) error: Error with file: emails-4.csv on line: 7 - Response data: {"Message":{"Error":"AuthUnexpectedMigrationError: Error Response from Auth"},"Success":false}
+Thu Feb 11 2021 10:25:44 GMT+0000 (Greenwich Mean Time) info: Moved file: emails-4.csv into erroredFiles folder
