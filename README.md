@@ -16,4 +16,4 @@ Need to have an env file at the root as well with the env variables eg.
 
 Install the package first `npm install`
 
-Run the code `npm run all`
+Run the code `npm run start`
