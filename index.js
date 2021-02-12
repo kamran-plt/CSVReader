@@ -46,7 +46,7 @@ const callCheckEmail = (row, lineNumber, file, reader) => {
     .then(() => reader.resume()) // resume the readstream
     .catch((error) => {
       logger.error(
-        `Error with file: ${file} on line: ${lineNumber} - Response data: ${JSON.stringify(error.response.data)}`
+        `Error with file: ${file} on line: ${lineNumber} - Response message: ${JSON.stringify(error.message)}`
       );
       moveFile(file, 'processing', 'errored');
     });
@@ -58,5 +58,10 @@ const moveFile = (file, from, to, cb) =>
     else {
       logger.info(`Moved file: ${file} into ${to} folder`);
       cb !== undefined && cb(file);
+      lineNumber = 1;
+      fs.readdir(
+        './emails/',
+        (err, files) => files.length && processCSV(files[Math.floor(Math.random() * files.length)])
+      );
     }
   });
