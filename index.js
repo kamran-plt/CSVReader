@@ -5,11 +5,6 @@ require('dotenv').config();
 const logger = require('./logger/logger');
 
 let lineNumber = 1;
-fs.readdir('./emails/', (err, files) =>
-  files.length
-    ? processCSV(files[Math.floor(Math.random() * files.length)])
-    : console.log('No files found in given folder!')
-);
 
 const processCSV = (file) => {
   moveFile(file, 'emails', 'processing', (file) => {
@@ -59,9 +54,12 @@ const moveFile = (file, from, to, cb) =>
       logger.info(`Moved file: ${file} into ${to} folder`);
       cb !== undefined && cb(file);
       lineNumber = 1;
-      fs.readdir(
-        './emails/',
-        (err, files) => files.length && processCSV(files[Math.floor(Math.random() * files.length)])
-      );
+      files = fs.readdirSync('emails');
+      files.length && processCSV(files[Math.floor(Math.random() * files.length)]);
     }
   });
+
+let files = fs.readdirSync('emails');
+files.length
+  ? processCSV(files[Math.floor(Math.random() * files.length)])
+  : console.log('No files found in given folder!');
