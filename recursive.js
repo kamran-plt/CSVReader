@@ -8,7 +8,10 @@ const logger = require('./logger/logger');
 const csvProcessor = async () => {
   let fileError = false;
   const files = await glob(['./emails/*.csv'], { dot: true });
-  if (files.length === 0) return; // If no files then stop recursion
+  if (files.length === 0) {
+    console.log('No files remaining in emails folder!');
+    return; // If no files then stop recursion
+  }
   const randomFile = files[Math.floor(Math.random() * files.length)]; // pick random from files
 
   if (fs.existsSync(`${randomFile}`)) {
@@ -25,7 +28,7 @@ const csvProcessor = async () => {
     }
 
     moveFile(randomFile, fileError ? 'errored' : 'processed');
-    csvProcessor(); // Call again processor for next file
+    await csvProcessor(); // Call again processor for next file
   }
 };
 

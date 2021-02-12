@@ -5,10 +5,15 @@ const glob = require('fast-glob');
 require('dotenv').config();
 const logger = require('./logger/logger');
 
+let files;
 const csvProcessor = async () => {
-  let files = await glob(['./emails/*.csv'], { dot: true });
-
   do {
+    files = await glob(['./emails/*.csv'], { dot: true });
+    if (files.length === 0) {
+      console.log('No files remaining in emails folder!');
+      break;
+    }
+
     const randomFile = files[Math.floor(Math.random() * files.length)]; //pick random from files
 
     if (fs.existsSync(`${randomFile}`)) {
@@ -23,9 +28,9 @@ const csvProcessor = async () => {
           break;
         }
       }
+
       moveFile(randomFile, fileError ? 'errored' : 'processed');
     }
-    files = await glob(['./emails/*.csv'], { dot: true });
   } while (files.length);
 };
 

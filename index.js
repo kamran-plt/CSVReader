@@ -4,13 +4,22 @@ const axios = require('axios');
 require('dotenv').config();
 const logger = require('./logger/logger');
 
-const processCSV = (file) => {
+const processCSV = () => {
   let lineNumber = 1;
-  fs.renameSync(`emails/${file}`, `processing/${file}`);
-  logger.info(`Moved file: ${file} into processing folder`);
+
+  files = fs.readdirSync('emails');
+  if (files.length === 0) {
+    console.log('No files remaining in emails folder!');
+    return; // If no files then stop recursion
+  }
+
+  const randomFile = files[Math.floor(Math.random() * files.length)];
+
+  fs.renameSync(`emails/${randomFile}`, `processing/${randomFile}`);
+  logger.info(`Moved file: ${randomFile} into processing folder`);
 
   const reader = fs
-    .createReadStream(`processing/${file}`)
+    .createReadStream(`processing/${randomFile}`)
     .pipe(eventStream.split())
     .pipe(
       eventStream
@@ -21,19 +30,21 @@ const processCSV = (file) => {
             reader.resume();
           } catch (error) {
             logger.error(
-              `Error with file: ${file} on line: ${lineNumber} - Response message: ${JSON.stringify(error.message)}`
+              `Error with file: ${randomFile} on line: ${lineNumber} - Response message: ${JSON.stringify(
+                error.message
+              )}`
             );
-            moveFileAndCheckNextFile(file, 'processing', 'errored');
+            moveFileAndCheckNextFile(randomFile, 'processing', 'errored');
           }
           lineNumber++;
         })
         .on('error', (err) => {
-          logger.error(`Error while reading file: ${file} on line ${lineNumber}`, err);
-          moveFileAndCheckNextFile(file, 'processing', 'errored');
+          logger.error(`Error while reading file: ${randomFile} on line ${lineNumber}`, err);
+          moveFileAndCheckNextFile(randomFile, 'processing', 'errored');
         })
         .on('end', () => {
-          logger.info(`Processed entire file: ${file}`);
-          moveFileAndCheckNextFile(file, 'processing', 'processed');
+          logger.info(`Processed entire file: ${randomFile}`);
+          moveFileAndCheckNextFile(randomFile, 'processing', 'processed');
         })
     );
 };
@@ -51,11 +62,7 @@ const callCheckEmail = async (row) => {
 const moveFileAndCheckNextFile = (file, from, to) => {
   fs.renameSync(`${from}/${file}`, `${to}/${file}`);
   logger.info(`Moved file: ${file} into ${to} folder`);
-  files = fs.readdirSync('emails');
-  files.length && processCSV(files[Math.floor(Math.random() * files.length)]);
+  processCSV();
 };
 
-let files = fs.readdirSync('emails');
-files.length
-  ? processCSV(files[Math.floor(Math.random() * files.length)])
-  : console.log('No files found in given folder!');
+processCSV();
