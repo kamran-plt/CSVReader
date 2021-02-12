@@ -16,7 +16,7 @@ const csvProcessor = async () => {
       let fileError = false;
       for (const row of data) {
         try {
-          await migrateGuestEmail(row[2], randomFile);
+          await migrateGuestEmail(row[2]);
         } catch (error) {
           logger.error(`Error with file: ${randomFile}- CustomerId: ${row[0]} - Response data: ${error.message}`);
           fileError = true;
@@ -42,7 +42,7 @@ async function getFileContents(filepath) {
   });
 }
 
-const migrateGuestEmail = async (Email, file) => {
+const migrateGuestEmail = async (Email) => {
   return await axios({
     method: 'post',
     headers: { 'x-api-key': process.env.CCS_API_KEY },
@@ -53,12 +53,8 @@ const migrateGuestEmail = async (Email, file) => {
 
 const moveFile = (file, destination) => {
   const fileName = file.split('/')[2];
-  return fs.rename(file, `${destination}/${fileName}`, (err) => {
-    if (err) logger.error(err);
-    else {
-      logger.info(`Moved file: ${file} into ${destination} folder`);
-    }
-  });
+  fs.renameSync(file, `${destination}/${fileName}`);
+  logger.info(`Moved file: ${file} into ${destination} folder`);
 };
 
 csvProcessor().catch((error) => logger.error(error));
